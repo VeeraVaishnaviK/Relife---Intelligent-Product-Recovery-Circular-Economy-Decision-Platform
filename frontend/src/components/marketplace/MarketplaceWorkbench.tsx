@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Card } from '../ui/Card';
 import { formatINR } from '../../lib/formatters';
 import { fetchMarketplaceComponents, fetchMarketplaceBuyers, allocateComponent } from '../../lib/api';
@@ -19,7 +20,8 @@ import {
   MapPin,
   RefreshCw,
   Clock,
-  AlertCircle
+  AlertCircle,
+  Gavel
 } from 'lucide-react';
 
 export function MarketplaceWorkbench() {
@@ -168,6 +170,13 @@ export function MarketplaceWorkbench() {
         title="Reusable Electronic Sub-Assemblies & B2B Match Engine"
         action={
           <div className="flex items-center gap-2">
+            <Link
+              href="/marketplace/auctions"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#FFC21A] to-[#F57C00] text-slate-950 text-xs font-bold shadow-md hover:brightness-110 transition-all"
+            >
+              <Gavel className="w-3.5 h-3.5" />
+              <span>Live Reverse Auctions</span>
+            </Link>
             <button
               type="button"
               onClick={exportManifest}
