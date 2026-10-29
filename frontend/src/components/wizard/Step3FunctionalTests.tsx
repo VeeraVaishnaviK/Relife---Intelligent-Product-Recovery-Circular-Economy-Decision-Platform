@@ -18,6 +18,7 @@ import {
   Power,
   CircuitBoard,
 } from 'lucide-react';
+import { VoiceInspectionInput } from '../voice/VoiceInspectionInput';
 
 interface Step3Props {
   returnId: string;
@@ -226,6 +227,15 @@ export function Step3FunctionalTests({
           >
             Unknown Tests (Triggers Human Review)
           </button>
+          <VoiceInspectionInput
+            returnId={returnId}
+            label="Voice Checklist Auto-Fill"
+            onApply={(notes, checklistUpdates) => {
+              if (checklistUpdates) {
+                setTestValues((prev) => ({ ...prev, ...checklistUpdates }));
+              }
+            }}
+          />
         </div>
       </div>
 

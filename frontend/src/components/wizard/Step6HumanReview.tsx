@@ -14,6 +14,7 @@ import {
   Sparkles,
   Info,
 } from 'lucide-react';
+import { VoiceInspectionInput } from '../voice/VoiceInspectionInput';
 
 interface Step6Props {
   returnId: string;
@@ -162,9 +163,15 @@ export function Step6HumanReview({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Technician Inspection Notes
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-xs font-semibold text-slate-300">
+                  Technician Inspection Notes
+                </label>
+                <VoiceInspectionInput
+                  returnId={returnId}
+                  onApply={(formattedNotes) => setNotes(formattedNotes)}
+                />
+              </div>
               <input
                 type="text"
                 value={notes}

@@ -5,6 +5,7 @@ import { HumanReviewItem } from '../../lib/types';
 import { resolveReview } from '../../lib/api';
 import { PathwayBadge } from '../ui/Badge';
 import { X, CheckCircle, ShieldAlert, Cpu, Wrench, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { VoiceInspectionInput } from '../voice/VoiceInspectionInput';
 
 interface ResolveReviewModalProps {
   item: HumanReviewItem | null;
@@ -126,9 +127,15 @@ export function ResolveReviewModal({ item, onClose, onSuccess }: ResolveReviewMo
 
           {/* Technician Verification Notes */}
           <div>
-            <label className="block text-slate-700 font-bold mb-1">
-              Technician Bench Verification Notes
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-slate-700 font-bold">
+                Technician Bench Verification Notes
+              </label>
+              <VoiceInspectionInput
+                returnId={item.return_id}
+                onApply={(formattedNotes) => setNotes(formattedNotes)}
+              />
+            </div>
             <input
               type="text"
               value={notes}
