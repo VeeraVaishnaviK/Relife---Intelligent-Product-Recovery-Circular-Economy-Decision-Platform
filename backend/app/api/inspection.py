@@ -81,6 +81,7 @@ async def upload_inspection_images(
     return_id: str = Form(...),
     sample_filename: Optional[str] = Form(None),
     files: Optional[List[UploadFile]] = File(None),
+    capture_tags: Optional[str] = Form(None),
     db: Session = Depends(get_db)
 ):
     """
@@ -134,6 +135,8 @@ async def upload_inspection_images(
         is_blurry=analysis["is_blurry"],
         quality_flag=analysis["quality_flag"],
         model_version=analysis["model_version"],
+        notes=f"AR Captured Angles: {capture_tags}" if capture_tags else None,
+        image_paths_json=capture_tags if capture_tags else None,
         inspected_at=now
     )
     db.add(inspection)

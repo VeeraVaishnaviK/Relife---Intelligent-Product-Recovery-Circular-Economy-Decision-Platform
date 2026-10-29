@@ -17,12 +17,15 @@ import {
   ShieldAlert,
   ArrowRight,
   Eye,
+  Layers,
 } from 'lucide-react';
+import { GuidedCaptureCamera } from '../camera/GuidedCaptureCamera';
 
 interface Step2Props {
   returnId: string;
   onInspectionComplete: (data: ImageInspectionResponse) => void;
   inspectionData: ImageInspectionResponse | null;
+  category?: string;
 }
 
 const DEFECT_COLORS: Record<string, string> = {
@@ -37,10 +40,13 @@ export function Step2ImageInspection({
   returnId,
   onInspectionComplete,
   inspectionData,
+  category = 'Laptop',
 }: Step2Props) {
   const [samples, setSamples] = useState<SampleImageItem[]>([]);
   const [selectedSample, setSelectedSample] = useState<string>('laptop_cracked_screen.jpg');
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [capturedAngleTags, setCapturedAngleTags] = useState<string[]>([]);
+  const [isGuidedCameraOpen, setIsGuidedCameraOpen] = useState<boolean>(false);
   const [previewUrl, setPreviewUrl] = useState<string>('/api/inspections/image/laptop_cracked_screen.jpg');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -92,6 +98,10 @@ export function Step2ImageInspection({
         formData.append('sample_filename', selectedSample);
       } else {
         formData.append('sample_filename', 'laptop_cracked_screen.jpg');
+      }
+
+      if (capturedAngleTags.length > 0) {
+        formData.append('capture_tags', capturedAngleTags.join(','));
       }
 
       const res = await uploadInspection(formData);
@@ -156,6 +166,32 @@ export function Step2ImageInspection({
                   );
                 })}
               </div>
+            </div>
+
+            {/* AR Guided Capture Camera Option */}
+            <div className="pt-2 border-t border-[#1E202E]">
+              <button
+                type="button"
+                onClick={() => setIsGuidedCameraOpen(true)}
+                className="w-full py-3 px-3.5 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 hover:from-amber-500/20 hover:to-orange-500/20 border border-amber-500/40 text-white font-bold text-xs flex items-center justify-between group transition-all"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#FFC21A] to-[#F57C00] flex items-center justify-center text-slate-950">
+                    <Camera className="w-4 h-4" />
+                  </div>
+                  <div className="text-left">
+                    <span className="block text-white group-hover:text-[#FFC21A] transition-colors">
+                      AR-Assisted Capture Guide
+                    </span>
+                    <span className="text-[10px] text-slate-400 font-normal">
+                      Multi-angle alignment overlays + blur check
+                    </span>
+                  </div>
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#181926] text-amber-300 border border-amber-500/30">
+                  Mobile Web
+                </span>
+              </button>
             </div>
 
             {/* Upload Input */}
@@ -229,6 +265,20 @@ export function Step2ImageInspection({
                 </div>
               )}
             </div>
+
+            {capturedAngleTags.length > 0 && (
+              <div className="mb-3 p-2.5 rounded-xl bg-gradient-to-r from-amber-500/10 to-emerald-500/10 border border-amber-500/30 text-xs text-amber-300 flex items-center justify-between">
+                <span className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>
+                    <strong>AR Verified Angles:</strong> {capturedAngleTags.map((t) => t.replace('_', ' ')).join(' • ')}
+                  </span>
+                </span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#181926] text-emerald-400 border border-emerald-500/30 shrink-0">
+                  Passed Pre-Check
+                </span>
+              </div>
+            )}
 
             {/* Interactive Image View with Bounding Boxes */}
             <div className="relative w-full aspect-square max-h-[420px] bg-[#08080D] rounded-xl overflow-hidden border border-[#252836] flex items-center justify-center">
@@ -359,6 +409,21 @@ export function Step2ImageInspection({
           </div>
         </div>
       </div>
+      {/* Standalone AR Guided Capture Modal */}
+      {isGuidedCameraOpen && (
+        <GuidedCaptureCamera
+          category={category}
+          onCaptureComplete={(files, tags) => {
+            setUploadedFiles(files);
+            setCapturedAngleTags(tags);
+            setSelectedSample('');
+            if (files.length > 0) {
+              setPreviewUrl(URL.createObjectURL(files[0]));
+            }
+          }}
+          onClose={() => setIsGuidedCameraOpen(false)}
+        />
+      )}
     </div>
   );
 }

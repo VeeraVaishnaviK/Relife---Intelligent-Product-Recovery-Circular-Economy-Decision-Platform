@@ -173,6 +173,7 @@ export function RecoveryWizard() {
             returnId={returnId}
             onInspectionComplete={handleInspectionComplete}
             inspectionData={inspectionData}
+            category={registeredData?.category || 'Laptop'}
           />
         )}
 
