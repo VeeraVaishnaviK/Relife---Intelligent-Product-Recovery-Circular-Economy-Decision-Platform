@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { DateRange } from '../../lib/types';
 import {
   Search,
@@ -9,6 +10,7 @@ import {
   Calendar,
   X,
   Sparkles,
+  Calculator,
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -83,6 +85,15 @@ export function Header({
               );
             })}
           </div>
+
+          {/* Enterprise ROI Calculator Link */}
+          <Link
+            href="/roi-calculator"
+            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#181926] hover:bg-[#252836] text-[#FFC21A] border border-[#FFC21A]/30 text-xs font-bold transition-all shadow-sm"
+          >
+            <Calculator className="w-3.5 h-3.5" />
+            <span>ROI Calculator</span>
+          </Link>
 
           {/* Notification Bell */}
           <div className="relative">

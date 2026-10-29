@@ -11,6 +11,7 @@ from .api.decision import router as decision_router
 from .api.marketplace import router as marketplace_router
 from .api.outcomes import router as outcomes_router
 from .api.auctions import router as auctions_router
+from .api.roi import router as roi_router
 from . import auction_models
 from .vision import generate_sample_demo_images
 
@@ -55,6 +56,7 @@ app.include_router(decision_router)
 app.include_router(marketplace_router)
 app.include_router(outcomes_router)
 app.include_router(auctions_router)
+app.include_router(roi_router)
 
 
 @app.get("/")
